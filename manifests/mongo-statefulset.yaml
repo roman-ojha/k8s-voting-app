@@ -1,8 +1,9 @@
+# This will create 3 mongodb Pods with statefulsets and persistent volume with persistent volume claim
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongo
-  namespace: cloudchamp
+  namespace: k8s-voting-app
 spec:
   serviceName: mongo
   replicas: 3
@@ -30,8 +31,8 @@ spec:
                 topologyKey: kubernetes.io/hostname
       terminationGracePeriodSeconds: 10
       containers:
-        - name: mongo
-          image: mongo:4.2
+        - name: mongo # providing the container name
+          image: mongo:4.2 # it's image
           command:
             - "numactl"
             - "--interleave=all"
@@ -43,17 +44,20 @@ spec:
             - "--replSet"
             - "rs0"
           ports:
-            - containerPort: 27017
-          volumeMounts:
-            - name: mongodb-persistent-storage-claim
+            - containerPort: 27017 # ports where mongodb runs
+          volumeMounts: # mounting the volume on some path with persistent Storage
+            - name: mongodb-persistent-storage-claim # name of the persistent storage
               mountPath: /data/db
   volumeClaimTemplates:
     - metadata:
-        name: mongodb-persistent-storage-claim
+        name: mongodb-persistent-storage-claim # name of the persistent storage
       spec:
         accessModes:
           - ReadWriteOnce
         storageClassName: gp2
         resources:
           requests:
-            storage: 0.5Gi
+            storage: 0.5Gi # request storage for 0.5 GB
+
+
+  # Once we run this along with the pods it will create Storage Volume

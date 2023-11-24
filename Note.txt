@@ -29,3 +29,43 @@
             chmod +x ./kubectl
             sudo cp ./kubectl /usr/local/bin
             export path=/usr/local/bin:$PATH
+            
+    *> Manifest explanation:
+        -> Github Ref: https://github.com/N4si/K8s-voting-app
+        -> https://youtu.be/pTmIoKUeU-A?list=PL5sSYBuH9_fhG9oSfSGHAoL3qp2LgoueT&t=1289
+        *) Apply:
+            -> './manifests/namespace.yml'
+            -> './manifests/mongo-storageclass.yaml'
+            -> './manifests/mongo-statefulset.yaml'
+            -> './manifests/mongo-service.yaml'
+                -> To expose the mongodb Service we will going to use Headless service where use have set 'ClusterIP' and it is set to None
+                -> It meas that we are not exposing it to the outside world we are just exposing it to the API service
+                -> run mongo shell inside pods:
+                    -> kubectl exec -it <pod_name> -- mongo
+                    
+                *) Setting up mongo-0 as primary and other 2 as secondary like:
+                    kubectl exec -it mongo-0 -- mongo
+                    rs.initiate();
+                    sleep(2000);
+                    rs.add("mongo-1.mongo:27017");
+                    sleep(2000);
+                    rs.add("mongo-2.mongo:27017");
+                    sleep(2000);
+                    cfg = rs.conf();
+                    cfg.members[0].host = "mongo-0.mongo:27017";
+                    rs.reconfig(cfg, {force: true});
+                    sleep(5000);
+            -> './manifests/mongo-secret.yaml'
+            -> './manifests/api-deployment.yaml'
+                -> kubectl expose deploy api \
+                 --name=api \
+                 --type=LoadBalancer \
+                 --port=80 \
+                 --target-port=8080
+                    -> When we run this it should go and create load balancer service for us
+            -> './manifests/api-service.yaml'
+            -> './manifests/frontend-deployment.yaml'
+            -> './manifests/frontend-service.yaml'
+
+            
+        -> See all the commands on './README.md' as well

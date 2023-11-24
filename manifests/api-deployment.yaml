@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
-  namespace: cloudchamp
+  namespace: k8s-voting-app
   labels:
     role: api
     env: demo
@@ -22,34 +22,34 @@ spec:
         role: api
     spec:
       containers:
-      - name: api
-        image: cloudacademydevops/api:v3
-        imagePullPolicy: Always
-        env:
-          - name: MONGO_CONN_STR
-            value: mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/langdb?replicaSet=rs0
-          - name: MONGO_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: mongodb-secret
-                key: username
-          - name: MONGO_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mongodb-secret
-                key: password
-        ports:
-        - containerPort: 8080
-        livenessProbe:
-          httpGet:
-            path: /ok
-            port: 8080
-          initialDelaySeconds: 2
-          periodSeconds: 5
-        readinessProbe:
-          httpGet:
-             path: /ok
-             port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          successThreshold: 1
+        - name: api
+          image: cloudacademydevops/api:v3
+          imagePullPolicy: Always
+          env:
+            - name: MONGO_CONN_STR
+              value: mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/langdb?replicaSet=rs0 # mongodb connection string where we have pass 3 pods where mongo-0 as primary to connect
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: username
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: password
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /ok
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ok
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1

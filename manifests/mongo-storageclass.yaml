@@ -1,0 +1,8 @@
+# Creating gp2 storage class cause while trying to apply './mongo-storageclass.yaml' it give's me storage class 'gp2' not found on Google Cloud Kubernetes Engine
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp2
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
