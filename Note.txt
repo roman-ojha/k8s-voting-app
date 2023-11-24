@@ -16,3 +16,16 @@
             -> './02_Mongodb_Replicas.png', './03_Mongodb_Replicas.png'
             -> We have 3 pods to enable Replica sets of MOngoDB, Where Pod0 will be primary which will Read and write Data and Pod1 & Pod2 will going to be secondary and have replicas of data and only works when the first pod will get deleted or destroyed './04_Make_Primary_DB.png'
             -> Along with the pods we have PV(Persistent volumes) & PVC(Persistent volume claims) to store the data from the database into EBS volume in AWS
+            
+
+*) Setup:
+    -> https://github.com/N4si/K8s-voting-app
+    *> Setup EKS cluster:
+        -> https://youtu.be/pTmIoKUeU-A?list=PL5sSYBuH9_fhG9oSfSGHAoL3qp2LgoueT&t=342
+    *> Setup up EC2 Instance for development:
+        -> https://youtu.be/pTmIoKUeU-A?list=PL5sSYBuH9_fhG9oSfSGHAoL3qp2LgoueT&t=493
+        -> Install Kubectl on AWS EC2:
+            curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.3/2023-11-14/bin/darwin/amd64/kubectl
+            chmod +x ./kubectl
+            sudo cp ./kubectl /usr/local/bin
+            export path=/usr/local/bin:$PATH
