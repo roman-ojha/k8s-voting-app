@@ -1,0 +1,18 @@
+*) Project on:
+    -> Client: React
+    -> Backend: Golang
+    -> Database: MongoDB
+    -> Deployed on: Kubernetes Cluster
+    
+*) Architecture:
+    -> whole application will be deployed on EKS
+    -> Have three services:
+        1. Frontend
+            -> It will going to be deployed using deployment and created using React and it will be expose using the Service called ELB(Elastic Load balancer) type
+        2. API
+            -> It will going to be deployed using Deployment and created using Golang and exposed using the service of Load balancer type ELB(Elastic Load balancer)
+        3. MongoDB
+            -> Mongodb have 3 pods, and they are going to be deployed using statefulSets
+            -> './02_Mongodb_Replicas.png', './03_Mongodb_Replicas.png'
+            -> We have 3 pods to enable Replica sets of MOngoDB, Where Pod0 will be primary which will Read and write Data and Pod1 & Pod2 will going to be secondary and have replicas of data and only works when the first pod will get deleted or destroyed './04_Make_Primary_DB.png'
+            -> Along with the pods we have PV(Persistent volumes) & PVC(Persistent volume claims) to store the data from the database into EBS volume in AWS
